@@ -43,6 +43,7 @@ function DeploymentSettings() {
     const [deploymentOptions] = useState([
         {label: __('ZIP Archive', 'simply-static'), value: 'zip'},
         {label: __('Local Directory', 'simply-static'), value: 'local'},
+        {label: __('S3 Compatible Storage', 'simply-static'), value: 's3'},
         {label: __('Static Studio', 'simply-static'), value: 'simply-static-studio'},
         {label: __('SFTP', 'simply-static'), value: 'sftp'},
         {label: __('GitHub', 'simply-static'), value: 'github'},
@@ -566,6 +567,67 @@ function DeploymentSettings() {
                             value={settings.cdn_directory}
                             onChange={(directory) => {
                                 updateSetting('cdn_directory', directory);
+                            }}
+                        />
+                    </CardBody>
+                </Card>
+            }
+            <Spacer margin={5}/>
+            {deliveryMethod === 's3' &&
+                <Card>
+                    <CardHeader>
+                        <b>{__('S3 Compatible Storage', 'simply-static')}</b>
+                    </CardHeader>
+                    <CardBody>
+                        <TextControl
+                            label={__('S3 Access Key', 'simply-static')}
+                            type={"text"}
+                            help={__('Enter your S3 access key.', 'simply-static')}
+                            value={settings.s3_access_key}
+                            onChange={(access_key) => {
+                                updateSetting('s3_access_key', access_key);
+                            }}
+                        />
+
+                        <TextControl
+                            label={__('S3 Secret Key', 'simply-static')}
+                            type={"password"}
+                            help={__('Enter your S3 secret key.', 'simply-static')}
+                            value={settings.s3_secret_key}
+                            onChange={(secret_key) => {
+                                updateSetting('s3_secret_key', secret_key);
+                            }}
+                        />
+
+                        <TextControl
+                            label={__('S3 Bucket Name', 'simply-static')}
+                            type={"text"}
+                            help={__('Enter the name of your S3 bucket.', 'simply-static')}
+                            value={settings.s3_bucket}
+                            onChange={(bucket) => {
+                                updateSetting('s3_bucket', bucket);
+                            }}
+                        />
+
+                        <TextControl
+                            label={__('S3 Region', 'simply-static')}
+                            type={"text"}
+                            placeholder={"us-east-1"}
+                            help={__('Enter your S3 region (e.g., us-east-1, eu-west-1).', 'simply-static')}
+                            value={settings.s3_region}
+                            onChange={(region) => {
+                                updateSetting('s3_region', region);
+                            }}
+                        />
+
+                        <TextControl
+                            label={__('S3 Endpoint (Optional)', 'simply-static')}
+                            type={"text"}
+                            placeholder={"https://s3.amazonaws.com"}
+                            help={__('Enter the S3 endpoint URL for S3-compatible services (leave empty for AWS S3).', 'simply-static')}
+                            value={settings.s3_endpoint}
+                            onChange={(endpoint) => {
+                                updateSetting('s3_endpoint', endpoint);
                             }}
                         />
                     </CardBody>
