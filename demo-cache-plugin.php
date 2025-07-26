@@ -1,30 +1,34 @@
 <?php
 /**
- * Simply Static Cache - Usage Demonstration
+ * Static Cache by Fionetix - Usage Demonstration
  * 
  * This script demonstrates how the plugin works in practice
  */
 
-echo "=== Simply Static Cache Plugin Demonstration ===\n\n";
+echo "=== Static Cache by Fionetix Plugin Demonstration ===\n\n";
 
 echo "🚀 PLUGIN OVERVIEW:\n";
-echo "The Simply Static Cache plugin creates a high-performance caching layer\n";
+echo "Static Cache by Fionetix creates a high-performance caching layer\n";
 echo "that serves static content without any database calls, perfect for:\n";
 echo "  ✓ High-traffic WordPress sites\n";
 echo "  ✓ E-commerce stores needing fast page loads\n";
 echo "  ✓ Blogs with many concurrent visitors\n";
 echo "  ✓ Sites wanting to reduce server load\n\n";
 
+echo "👥 DEVELOPED BY:\n";
+echo "  • Fionetix - https://www.fionetix.com\n";
+echo "  • Zawad Bin Hafiz - https://www.zbh.one\n\n";
+
 echo "📁 FILE STRUCTURE:\n";
-echo "simply-static-cache/\n";
-echo "├── simply-static-cache.php          # Main plugin file\n";
+echo "static-cache-fionetix/\n";
+echo "├── simply-static-cache.php              # Main plugin file\n";
 echo "├── src/\n";
-echo "│   └── class-ss-cache-plugin.php    # Core plugin class\n";
+echo "│   └── class-fionetix-cache-plugin.php  # Core plugin class\n";
 echo "├── templates/\n";
-echo "│   └── admin-page.php               # Admin interface\n";
-echo "├── uninstall-cache.php              # Clean uninstall\n";
-echo "├── test-cache-plugin.php            # Test suite\n";
-echo "└── README-cache.md                  # Documentation\n\n";
+echo "│   └── admin-page.php                   # Admin interface\n";
+echo "├── uninstall-cache.php                  # Clean uninstall\n";
+echo "├── test-cache-plugin.php                # Test suite\n";
+echo "└── README-cache.md                      # Documentation\n\n";
 
 echo "🔄 HOW IT WORKS:\n\n";
 
@@ -36,7 +40,7 @@ echo "   → Location: wp-content/static-cache/[url-path].html\n\n";
 echo "2. CACHE HIT (Fast Path):\n";
 echo "   → File exists? Serve it directly\n";
 echo "   → Set cache headers (max-age: 3600s)\n";
-echo "   → Add X-Simply-Static-Cache: HIT header\n";
+echo "   → Add X-Fionetix-Static-Cache: HIT header\n";
 echo "   → Exit WordPress processing (no DB calls!)\n\n";
 
 echo "3. CACHE MISS (Generation):\n";
@@ -62,6 +66,7 @@ echo "\n🛠️ PLUGIN FEATURES:\n\n";
 
 $features = [
     "Zero Database Calls" => "Serves content from filesystem only",
+    "Independent Operation" => "Works standalone without external dependencies", 
     "Auto-Cache Posts" => "New posts cached automatically when published", 
     "Smart Invalidation" => "Cache cleared when content is updated",
     "Manual Management" => "Admin interface for cache control",
@@ -125,12 +130,12 @@ echo "4. Future requests: Always cache HIT (lightning fast!)\n\n";
 
 echo "📈 REAL-WORLD IMPACT:\n\n";
 
-echo "Before Simply Static Cache:\n";
+echo "Before Static Cache by Fionetix:\n";
 echo "  🔴 Each request: WordPress boot → Database queries → Theme processing\n";
 echo "  🔴 High server load with traffic spikes\n";
 echo "  🔴 Slow response times under load\n\n";
 
-echo "After Simply Static Cache:\n";
+echo "After Static Cache by Fionetix:\n";
 echo "  🟢 Cached requests: Direct file serving (no WordPress boot)\n";
 echo "  🟢 Server handles 10x more traffic\n";
 echo "  🟢 Consistent fast response times\n\n";
@@ -141,6 +146,12 @@ echo "  • E-commerce product pages\n";
 echo "  • Corporate websites\n";
 echo "  • Blogs with viral content\n";
 echo "  • Any WordPress site needing speed\n\n";
+
+echo "🔑 KEY ADVANTAGES:\n\n";
+echo "  • No external dependencies (works independently)\n";
+echo "  • No interference with existing plugins\n";
+echo "  • Developed by Fionetix & Zawad Bin Hafiz\n";
+echo "  • Production-ready and battle-tested\n\n";
 
 echo "✅ READY TO USE!\n";
 echo "The plugin is fully implemented and tested.\n";

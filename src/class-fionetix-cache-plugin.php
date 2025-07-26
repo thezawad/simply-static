@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Main plugin class for Simply Static Cache
+ * Main plugin class for Static Cache by Fionetix
  */
-class SS_Cache_Plugin {
+class Fionetix_Cache_Plugin {
 
 	/**
 	 * Plugin instance
 	 *
-	 * @var SS_Cache_Plugin
+	 * @var Fionetix_Cache_Plugin
 	 */
 	private static $instance = null;
 
@@ -29,7 +29,7 @@ class SS_Cache_Plugin {
 	/**
 	 * Get plugin instance
 	 *
-	 * @return SS_Cache_Plugin
+	 * @return Fionetix_Cache_Plugin
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -43,7 +43,7 @@ class SS_Cache_Plugin {
 	 */
 	private function __construct() {
 		$this->cache_dir = WP_CONTENT_DIR . '/static-cache';
-		$this->options = get_option( 'ss_cache_options', array() );
+		$this->options = get_option( 'fionetix_cache_options', array() );
 		
 		$this->init_hooks();
 	}
@@ -61,7 +61,7 @@ class SS_Cache_Plugin {
 		add_action( 'post_updated', array( $this, 'invalidate_post_cache' ), 10, 3 );
 		
 		// Cron event handler for cache generation
-		add_action( 'ss_cache_generate_url', array( $this, 'generate_cache_for_url' ) );
+		add_action( 'fionetix_cache_generate_url', array( $this, 'generate_cache_for_url' ) );
 		
 		// Admin interface
 		if ( is_admin() ) {
@@ -70,9 +70,9 @@ class SS_Cache_Plugin {
 		}
 
 		// AJAX handlers
-		add_action( 'wp_ajax_ss_cache_generate', array( $this, 'ajax_cache_url' ) );
-		add_action( 'wp_ajax_ss_cache_clear', array( $this, 'ajax_clear_cache' ) );
-		add_action( 'wp_ajax_ss_cache_clear_all', array( $this, 'ajax_clear_all_cache' ) );
+		add_action( 'wp_ajax_fionetix_cache_generate', array( $this, 'ajax_cache_url' ) );
+		add_action( 'wp_ajax_fionetix_cache_clear', array( $this, 'ajax_clear_cache' ) );
+		add_action( 'wp_ajax_fionetix_cache_clear_all', array( $this, 'ajax_clear_all_cache' ) );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class SS_Cache_Plugin {
 		// If no cache exists and auto-caching is enabled, generate it
 		if ( $this->get_option( 'auto_generate_cache' ) ) {
 			// Schedule cache generation for this URL (non-blocking)
-			wp_schedule_single_event( time() + 5, 'ss_cache_generate_url', array( $current_url ) );
+			wp_schedule_single_event( time() + 5, 'fionetix_cache_generate_url', array( $current_url ) );
 		}
 	}
 
@@ -139,12 +139,12 @@ class SS_Cache_Plugin {
 		header( 'Content-Type: text/html; charset=UTF-8' );
 		
 		// Set cache headers
-		$max_age = apply_filters( 'ss_cache_max_age', 3600 ); // 1 hour default
+		$max_age = apply_filters( 'fionetix_cache_max_age', 3600 ); // 1 hour default
 		header( 'Cache-Control: public, max-age=' . $max_age );
 		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + $max_age ) . ' GMT' );
 		
 		// Add custom header to identify cached content
-		header( 'X-Simply-Static-Cache: HIT' );
+		header( 'X-Fionetix-Static-Cache: HIT' );
 	}
 
 	/**
@@ -159,12 +159,12 @@ class SS_Cache_Plugin {
 			$response = wp_remote_get( $url, array(
 				'timeout' => 30,
 				'headers' => array(
-					'User-Agent' => 'Simply Static Cache/1.0.0',
+					'User-Agent' => 'Static Cache by Fionetix/1.0.0',
 				),
 			) );
 
 			if ( is_wp_error( $response ) ) {
-				error_log( 'SS Cache: Error fetching URL ' . $url . ': ' . $response->get_error_message() );
+				error_log( 'Fionetix Cache: Error fetching URL ' . $url . ': ' . $response->get_error_message() );
 				return false;
 			}
 
@@ -172,14 +172,14 @@ class SS_Cache_Plugin {
 			
 			// Only cache successful responses
 			if ( $status_code !== 200 ) {
-				error_log( 'SS Cache: Non-200 response for URL ' . $url . ': ' . $status_code );
+				error_log( 'Fionetix Cache: Non-200 response for URL ' . $url . ': ' . $status_code );
 				return false;
 			}
 
 			$content = wp_remote_retrieve_body( $response );
 			
 			if ( empty( $content ) ) {
-				error_log( 'SS Cache: Empty content for URL ' . $url );
+				error_log( 'Fionetix Cache: Empty content for URL ' . $url );
 				return false;
 			}
 
@@ -197,15 +197,15 @@ class SS_Cache_Plugin {
 			
 			if ( false !== $success ) {
 				// Log success
-				error_log( 'SS Cache: Successfully cached URL ' . $url . ' to ' . $cache_file );
+				error_log( 'Fionetix Cache: Successfully cached URL ' . $url . ' to ' . $cache_file );
 				return true;
 			} else {
-				error_log( 'SS Cache: Failed to write cache file for URL ' . $url );
+				error_log( 'Fionetix Cache: Failed to write cache file for URL ' . $url );
 				return false;
 			}
 
 		} catch ( Exception $e ) {
-			error_log( 'SS Cache: Exception generating cache for ' . $url . ': ' . $e->getMessage() );
+			error_log( 'Fionetix Cache: Exception generating cache for ' . $url . ': ' . $e->getMessage() );
 			return false;
 		}
 	}
@@ -229,7 +229,7 @@ class SS_Cache_Plugin {
 		$post_url = get_permalink( $post_id );
 		
 		// Schedule cache generation
-		wp_schedule_single_event( time() + 10, 'ss_cache_generate_url', array( $post_url ) );
+		wp_schedule_single_event( time() + 10, 'fionetix_cache_generate_url', array( $post_url ) );
 	}
 
 	/**
@@ -311,10 +311,10 @@ class SS_Cache_Plugin {
 	 */
 	public function add_admin_menu() {
 		add_options_page(
-			__( 'Simply Static Cache', 'simply-static-cache' ),
-			__( 'Static Cache', 'simply-static-cache' ),
+			__( 'Static Cache by Fionetix', 'static-cache-fionetix' ),
+			__( 'Static Cache', 'static-cache-fionetix' ),
 			'manage_options',
-			'ss-cache-settings',
+			'fionetix-cache-settings',
 			array( $this, 'admin_page' )
 		);
 	}
@@ -323,21 +323,21 @@ class SS_Cache_Plugin {
 	 * Initialize admin settings
 	 */
 	public function admin_init() {
-		register_setting( 'ss_cache_options', 'ss_cache_options' );
+		register_setting( 'fionetix_cache_options', 'fionetix_cache_options' );
 	}
 
 	/**
 	 * Admin page content
 	 */
 	public function admin_page() {
-		include SS_CACHE_PATH . 'templates/admin-page.php';
+		include FIONETIX_CACHE_PATH . 'templates/admin-page.php';
 	}
 
 	/**
 	 * AJAX handler for caching a URL
 	 */
 	public function ajax_cache_url() {
-		check_ajax_referer( 'ss_cache_nonce', 'nonce' );
+		check_ajax_referer( 'fionetix_cache_nonce', 'nonce' );
 		
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( 'Unauthorized' );
@@ -348,7 +348,7 @@ class SS_Cache_Plugin {
 
 		wp_send_json( array(
 			'success' => $success,
-			'message' => $success ? __( 'Cache generated successfully', 'simply-static-cache' ) : __( 'Failed to generate cache', 'simply-static-cache' )
+			'message' => $success ? __( 'Cache generated successfully', 'static-cache-fionetix' ) : __( 'Failed to generate cache', 'static-cache-fionetix' )
 		) );
 	}
 
@@ -356,7 +356,7 @@ class SS_Cache_Plugin {
 	 * AJAX handler for clearing cache
 	 */
 	public function ajax_clear_cache() {
-		check_ajax_referer( 'ss_cache_nonce', 'nonce' );
+		check_ajax_referer( 'fionetix_cache_nonce', 'nonce' );
 		
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( 'Unauthorized' );
@@ -367,7 +367,7 @@ class SS_Cache_Plugin {
 
 		wp_send_json( array(
 			'success' => $success,
-			'message' => $success ? __( 'Cache cleared successfully', 'simply-static-cache' ) : __( 'Failed to clear cache', 'simply-static-cache' )
+			'message' => $success ? __( 'Cache cleared successfully', 'static-cache-fionetix' ) : __( 'Failed to clear cache', 'static-cache-fionetix' )
 		) );
 	}
 
@@ -375,7 +375,7 @@ class SS_Cache_Plugin {
 	 * AJAX handler for clearing all cache
 	 */
 	public function ajax_clear_all_cache() {
-		check_ajax_referer( 'ss_cache_nonce', 'nonce' );
+		check_ajax_referer( 'fionetix_cache_nonce', 'nonce' );
 		
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( 'Unauthorized' );
@@ -385,7 +385,7 @@ class SS_Cache_Plugin {
 
 		wp_send_json( array(
 			'success' => $success,
-			'message' => $success ? __( 'All cache cleared successfully', 'simply-static-cache' ) : __( 'Failed to clear all cache', 'simply-static-cache' )
+			'message' => $success ? __( 'All cache cleared successfully', 'static-cache-fionetix' ) : __( 'Failed to clear all cache', 'static-cache-fionetix' )
 		) );
 	}
 
@@ -403,7 +403,7 @@ class SS_Cache_Plugin {
 			$this->delete_directory_contents( $this->cache_dir );
 			return true;
 		} catch ( Exception $e ) {
-			error_log( 'SS Cache: Error clearing all cache: ' . $e->getMessage() );
+			error_log( 'Fionetix Cache: Error clearing all cache: ' . $e->getMessage() );
 			return false;
 		}
 	}
@@ -433,5 +433,34 @@ class SS_Cache_Plugin {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get cache statistics
+	 *
+	 * @return array Cache statistics
+	 */
+	public function get_cache_stats() {
+		$stats = array(
+			'total_files' => 0,
+			'total_size' => 0
+		);
+
+		if ( ! is_dir( $this->cache_dir ) ) {
+			return $stats;
+		}
+
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator( $this->cache_dir, RecursiveDirectoryIterator::SKIP_DOTS )
+		);
+
+		foreach ( $iterator as $file ) {
+			if ( $file->isFile() && $file->getExtension() === 'html' ) {
+				$stats['total_files']++;
+				$stats['total_size'] += $file->getSize();
+			}
+		}
+
+		return $stats;
 	}
 }

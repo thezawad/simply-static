@@ -1,12 +1,12 @@
 <?php
 /**
- * Simple test script for Simply Static Cache plugin
+ * Simple test script for Static Cache by Fionetix plugin
  * This script demonstrates the core functionality
  */
 
 // Simulate WordPress environment for testing
 if ( ! defined( 'ABSPATH' ) ) {
-	echo "This is a demonstration of the Simply Static Cache plugin functionality.\n\n";
+	echo "This is a demonstration of the Static Cache by Fionetix plugin functionality.\n\n";
 	
 	// Mock WordPress functions for testing
 	function wp_mkdir_p( $dir ) {

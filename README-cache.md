@@ -1,6 +1,6 @@
-# Simply Static Cache
+# Static Cache by Fionetix
 
-A high-performance WordPress caching plugin that serves static content without database calls, utilizing intelligent static file generation.
+A high-performance WordPress caching plugin that serves static content without database calls, providing lightning-fast page loading speeds.
 
 ## Features
 
@@ -10,16 +10,16 @@ A high-performance WordPress caching plugin that serves static content without d
 - **Smart Cache Invalidation**: Removes cache when content is updated
 - **Simple Management**: Easy-to-use admin interface for cache control
 - **Minimal Resource Usage**: Lightweight plugin with minimal overhead
+- **Independent Operation**: Works standalone without external dependencies
 
 ## Requirements
 
 - WordPress 6.2 or higher
 - PHP 7.4 or higher
-- Simply Static plugin (for enhanced functionality, but not strictly required)
 
 ## Installation
 
-1. Upload the plugin files to `/wp-content/plugins/simply-static-cache/`
+1. Upload the plugin files to `/wp-content/plugins/static-cache-fionetix/`
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Configure settings via Settings > Static Cache
 
@@ -45,6 +45,12 @@ The admin interface provides tools to:
 - Clear cache for specific URLs  
 - Clear all cached files
 - View cache statistics (file count, total size)
+
+## About the Developers
+
+**Static Cache by Fionetix** is developed by:
+- **Fionetix** - [www.fionetix.com](https://www.fionetix.com)
+- **Zawad Bin Hafiz** - [www.zbh.one](https://www.zbh.one)
 
 ## File Structure
 
