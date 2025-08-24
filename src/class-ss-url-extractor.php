@@ -378,6 +378,11 @@ class Url_Extractor {
 		$html_string = $this->get_body();
 		$match_tags  = apply_filters( 'ss_match_tags', self::$match_tags );
 
+		// Return early if HTML string is empty or false to prevent DOMDocument::loadHTML() ValueError
+		if ( empty( $html_string ) ) {
+			return '';
+		}
+
 		// First, extract and save all script tags using regex to ensure they're preserved
 		$this->script_tags  = []; // Reset the array for each call
 		$script_placeholder = '<!-- SCRIPT_PLACEHOLDER_%d -->';

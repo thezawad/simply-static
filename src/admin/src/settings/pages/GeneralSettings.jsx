@@ -29,6 +29,10 @@ function GeneralSettings() {
     const [scanThemePluginsDir, setScanThemePluginsDir] = useState(false);
     const [addFeeds, setAddFeeds] = useState(false);
     const [addRestApi, setAddRestApi] = useState(false);
+    const [cdnDomain, setCdnDomain] = useState('');
+    const [excludeUploads, setExcludeUploads] = useState(false);
+    const [incrementalExport, setIncrementalExport] = useState(false);
+    const [autoDeployEnabled, setAutoDeployEnabled] = useState(false);
 
     const setSavingSettings = () => {
         saveSettings();
@@ -78,6 +82,22 @@ function GeneralSettings() {
 
         if (settings.scan_themes_plugins_dir) {
             setScanThemePluginsDir(settings.scan_themes_plugins_dir);
+        }
+
+        if (settings.cdn_domain) {
+            setCdnDomain(settings.cdn_domain);
+        }
+
+        if (settings.exclude_uploads) {
+            setExcludeUploads(settings.exclude_uploads);
+        }
+
+        if (settings.incremental_export) {
+            setIncrementalExport(settings.incremental_export);
+        }
+
+        if (settings.auto_deploy_enabled) {
+            setAutoDeployEnabled(settings.auto_deploy_enabled);
         }
 
     }, [settings]);
@@ -305,6 +325,58 @@ function GeneralSettings() {
                     value={settings.urls_to_exclude}
                     onChange={(value) => {
                         updateSetting('urls_to_exclude', value);
+                    }}
+                />
+            </CardBody>
+        </Card>
+        <Spacer margin={5}/>
+        <Card>
+            <CardHeader>
+                <b>{__('CDN Settings', 'simply-static')}</b>
+            </CardHeader>
+            <CardBody>
+                <p>{__('Configure CDN settings for serving media files from a different domain.', 'simply-static')}</p>
+                <TextControl
+                    label={__('CDN Domain', 'simply-static')}
+                    type={"text"}
+                    placeholder={"https://cdn.example.com"}
+                    help={__('Enter your CDN domain URL. Media files will be rewritten to use this domain.', 'simply-static')}
+                    value={settings.cdn_domain}
+                    onChange={(value) => {
+                        updateSetting('cdn_domain', value);
+                    }}
+                />
+                <ToggleControl
+                    label={__('Exclude Uploads Folder', 'simply-static')}
+                    checked={settings.exclude_uploads}
+                    help={__('Exclude the uploads folder from static generation. Useful when using a CDN for media files.', 'simply-static')}
+                    onChange={(value) => {
+                        updateSetting('exclude_uploads', value);
+                    }}
+                />
+            </CardBody>
+        </Card>
+        <Spacer margin={5}/>
+        <Card>
+            <CardHeader>
+                <b>{__('Incremental Export Settings', 'simply-static')}</b>
+            </CardHeader>
+            <CardBody>
+                <p>{__('Configure incremental export to only regenerate changed content and enable automatic deployment.', 'simply-static')}</p>
+                <ToggleControl
+                    label={__('Enable Incremental Export', 'simply-static')}
+                    checked={settings.incremental_export}
+                    help={__('Only regenerate pages that have changed since the last export.', 'simply-static')}
+                    onChange={(value) => {
+                        updateSetting('incremental_export', value);
+                    }}
+                />
+                <ToggleControl
+                    label={__('Enable Auto-Deploy', 'simply-static')}
+                    checked={settings.auto_deploy_enabled}
+                    help={__('Automatically trigger a static export when content is updated (posts, pages, menus, etc.).', 'simply-static')}
+                    onChange={(value) => {
+                        updateSetting('auto_deploy_enabled', value);
                     }}
                 />
             </CardBody>

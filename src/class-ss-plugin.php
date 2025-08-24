@@ -78,6 +78,9 @@ class Plugin {
 			add_action( 'init', function () {
 				// Run export via WP-Cron.
 				add_action( 'simply_static_site_export_cron', array( self::$instance, 'run_static_export' ) );
+				
+				// Run auto-deploy via WP-Cron.
+				add_action( 'simply_static_auto_deploy', array( self::$instance, 'run_auto_deploy' ) );
 
 				// Filters.
 				add_filter( 'simplystatic.archive_creation_job.task_list', array(
@@ -106,6 +109,12 @@ class Plugin {
 				self::$instance->view                 = new View();
 				self::$instance->archive_creation_job = new Archive_Creation_Job();
 				self::$instance->page_handlers        = new Page_Handlers();
+
+				// Initialize CDN handler
+				new CDN_Handler();
+				
+				// Initialize incremental handler
+				new Incremental_Handler();
 
 				// Set up pagination.
 				$page                         = isset( $_GET['page'] ) ? $_GET['page'] : '';
@@ -156,6 +165,8 @@ class Plugin {
 		require_once $path . 'src/class-ss-options.php';
 		require_once $path . 'src/class-ss-view.php';
 		require_once $path . 'src/class-ss-url-extractor.php';
+		require_once $path . 'src/class-ss-cdn-handler.php';
+		require_once $path . 'src/class-ss-incremental-handler.php';
 		require_once $path . 'src/class-ss-url-fetcher.php';
 		require_once $path . 'src/background/class-ss-async-request.php';
 		require_once $path . 'src/background/class-ss-background-process.php';
@@ -168,6 +179,7 @@ class Plugin {
 		require_once $path . 'src/tasks/class-ss-setup-task.php';
 		require_once $path . 'src/tasks/class-ss-fetch-urls-task.php';
 		require_once $path . 'src/tasks/class-ss-transfer-files-locally-task.php';
+		require_once $path . 'src/tasks/class-ss-transfer-files-s3-task.php';
 		require_once $path . 'src/tasks/class-ss-create-zip-archive.php';
 		require_once $path . 'src/tasks/class-ss-wrapup-task.php';
 		require_once $path . 'src/tasks/class-ss-cancel-task.php';
@@ -260,6 +272,25 @@ class Plugin {
 
 				update_option( 'simply-static', $options );
 			}
+		}
+	}
+
+	/**
+	 * Handle auto deployment triggered by content changes
+	 *
+	 * @return void
+	 */
+	public function run_auto_deploy() {
+		// Check if auto-deploy is enabled
+		if ( ! $this->options->get( 'auto_deploy_enabled' ) ) {
+			return;
+		}
+
+		// Check if incremental export is enabled
+		if ( $this->options->get( 'incremental_export' ) ) {
+			$this->run_static_export( 0, 'incremental' );
+		} else {
+			$this->run_static_export( 0, 'export' );
 		}
 	}
 
@@ -446,6 +477,8 @@ class Plugin {
 			$task_list[] = 'create_zip_archive';
 		} elseif ( 'local' === $delivery_method ) {
 			$task_list[] = 'transfer_files_locally';
+		} elseif ( 's3' === $delivery_method ) {
+			$task_list[] = 'transfer_files_s3';
 		}
 
 		$task_list[] = 'wrapup';
